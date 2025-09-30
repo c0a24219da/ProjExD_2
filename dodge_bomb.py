@@ -47,6 +47,17 @@ def gameover(screen: pg.Surface) -> None:
     time.sleep(5)
     return
 
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    bb_imgs = []
+    bb_accs = []
+    for r in range(1, 11):
+        bb_img = pg.Surface((20*r, 20*r))
+        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        bb_imgs.append(bb_img)
+        kasoku = (+5*r, +5*r)
+        bb_accs.append(kasoku)
+    return bb_imgs, bb_accs
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -63,6 +74,9 @@ def main():
     vx, vy = +5, +5  # 爆弾の速度
     clock = pg.time.Clock()
     tmr = 0
+
+    bb_acc = init_bb_imgs()
+
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -90,6 +104,7 @@ def main():
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
+        axv = vx*bb_accs[min(tmr//500, 9)]
         bb_rct.move_ip(vx, vy)  # 爆弾を動かす
         yoko, tate = check_bound(bb_rct)
         if not yoko:  #  横方向にはみ出ていたら
