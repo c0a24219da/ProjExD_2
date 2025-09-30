@@ -29,34 +29,34 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 def gameover(screen: pg.Surface) -> None:
-    hh_img = pg.Surface((WIDTH, HEIGHT))
+    hh_img = pg.Surface((WIDTH, HEIGHT))  # hh_img -> 黒い背景全体
     pg.draw.rect(hh_img, (0,0,0), pg.Rect(0, 0, WIDTH, HEIGHT))
     hh_img.set_alpha(200)
-    hh_rct = hh_img.get_rect()
-    hh_rct.center = WIDTH/2, HEIGHT/2
-    fonto = pg.font.Font(None, 80)
-    txt = fonto.render("Game Over", True, (255, 255, 255))
+    hh_rct = hh_img.get_rect()  # hh_rct -> hh_imgをrctしたもの
+    hh_rct.center = WIDTH/2, HEIGHT/2  # hh_rct.center -> 画面の中央の位置を保存したもの
+    fonto = pg.font.Font(None, 80)  # font -> 文字列の大きさを保存したもの
+    txt = fonto.render("Game Over", True, (255, 255, 255))  # txt -> 文字列の詳細を保存したもの
     hh_img.blit(txt, [395,280])
-    kouka_img = pg.image.load("fig/8.png")
+    kouka_img = pg.image.load("fig/8.png")  # kouka_img -> こうかとんの画像を保存した変数
     hh_img.blit(kouka_img, [340,270])
     hh_img.blit(kouka_img, [707,270])
     screen.blit(hh_img, hh_rct)
     pg.display.update()
-    clock = pg.time.Clock()
+    clock = pg.time.Clock()  # clock -> pg.time.Clock()を保持したもの
     clock.tick(1)
     time.sleep(5)
     return
 
-def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
-    bb_imgs = []
-    bb_accs = []
-    for r in range(1, 11):
-        bb_img = pg.Surface((20*r, 20*r))
-        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
-        bb_imgs.append(bb_img)
-        kasoku = (+5*r, +5*r)
-        bb_accs.append(kasoku)
-    return bb_imgs, bb_accs
+# def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+#     bb_imgs = []
+#     bb_accs = []
+#     for r in range(1, 11):
+#         bb_img = pg.Surface((20*r, 20*r))
+#         pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+#         bb_imgs.append(bb_img)
+#         kasoku = (+5*r, +5*r)
+#         bb_accs.append(kasoku)
+#     return bb_imgs, bb_accs
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -75,7 +75,7 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
 
-    bb_acc = init_bb_imgs()
+    #bb_accs = init_bb_imgs()
 
     while True:
         for event in pg.event.get():
@@ -104,7 +104,10 @@ def main():
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
-        axv = vx*bb_accs[min(tmr//500, 9)]
+
+        #avx = vx*bb_accs[tmr][0]
+        #avy = vy*bb_accs[tmr][1]
+
         bb_rct.move_ip(vx, vy)  # 爆弾を動かす
         yoko, tate = check_bound(bb_rct)
         if not yoko:  #  横方向にはみ出ていたら
